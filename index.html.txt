@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Lab Energy - Realtime Dashboard</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 15px auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 400px;
+    }
+    .value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #0077cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ Smart Lab Energy Dashboard</h1>
+  <div class="card">
+    <p>Tegangan (V): <span class="value" id="voltage">--</span></p>
+    <p>Arus (A): <span class="value" id="current">--</span></p>
+    <p>Daya (W): <span class="value" id="power">--</span></p>
+    <p>Energi (Wh): <span class="value" id="energy">--</span></p>
+    <p>Frekuensi (Hz): <span class="value" id="frequency">--</span></p>
+    <p>Faktor Daya (PF): <span class="value" id="pf">--</span></p>
+  </div>
+
+  <script>
+    // Konfigurasi Firebase kamu
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "smart-lab-energy.firebaseapp.com",
+      databaseURL: "https://smart-lab-energy-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "smart-lab-energy",
+      storageBucket: "smart-lab-energy.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Init Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Realtime listener
+    const dataRef = db.ref("pzem"); // sesuaikan dengan path di database kamu
+    dataRef.on("value", (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        document.getElementById("voltage").textContent = data.voltage || "--";
+        document.getElementById("current").textContent = data.current || "--";
+        document.getElementById("power").textContent = data.power || "--";
+        document.getElementById("energy").textContent = data.energy || "--";
+        document.getElementById("frequency").textContent = data.frequency || "--";
+        document.getElementById("pf").textContent = data.pf || "--";
+      }
+    });
+  </script>
+</body>
+</html>
